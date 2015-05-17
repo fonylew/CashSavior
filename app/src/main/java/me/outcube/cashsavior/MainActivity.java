@@ -22,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 public class MainActivity extends ActionBarActivity {
 
     private Toolbar toolbar;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
+        Intent previousIntent = getIntent();
+        userId = previousIntent.getStringExtra("userId");
     }
 
 

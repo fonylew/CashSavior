@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,17 +18,16 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 
-import java.util.Arrays;
-import java.util.List;
 
 
 public class LoginActivity extends ActionBarActivity {
     private Button mainActivityBtn;
-    private TextView facebookTv;
 
     //facebook
+    private TextView facebookTv;
     private LoginButton facebookLoginBtn;
     private UiLifecycleHelper uiHelper;
+    private String userId;
 
     private Session.StatusCallback statusCallback = new Session.StatusCallback() {
         @Override
@@ -42,6 +40,8 @@ public class LoginActivity extends ActionBarActivity {
         }
     };
 
+    //facebook
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -53,8 +53,6 @@ public class LoginActivity extends ActionBarActivity {
         super.onSaveInstanceState(savedState);
         uiHelper.onSaveInstanceState(savedState);
     }
-
-    //facebook
 
     @Override
     public void onResume() {
@@ -83,21 +81,6 @@ public class LoginActivity extends ActionBarActivity {
         uiHelper.onCreate(savedInstanceState);
         //facebook
         findAllById();
-        facebookLoginBtn.setUserInfoChangedCallback(new UserInfoChangedCallback() {
-            @Override
-            public void onUserInfoFetched(GraphUser user) {
-                if (user != null) {
-                    //TODO: get user information
-                    String t1 = ""+user.getId();
-                    String t2 = ""+user.getLink();
-                    String t4 = ""+user.getName();
-                    String temp = t1+"\n"+t2+"\n"+t4;
-                    facebookTv.setText("Welcome, " + t4 + ". Click to logout");
-                } else {
-                    facebookTv.setText("Click to login with Facebook");
-                }
-            }
-        });
         initialize();
 
     }
@@ -106,12 +89,27 @@ public class LoginActivity extends ActionBarActivity {
         mainActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mainAcitiviyIntent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(mainAcitiviyIntent);
-                finish();
+                if (userId == null || userId.length() == 0) Toast.makeText(getApplication(),"Please login first.",Toast.LENGTH_LONG).show();
+                else {
+                    Intent mainActiviyIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    mainActiviyIntent.putExtra("userId", userId);
+                    startActivity(mainActiviyIntent);
+                    finish();
+                }
             }
         });
-
+        facebookLoginBtn.setUserInfoChangedCallback(new UserInfoChangedCallback() {
+            @Override
+            public void onUserInfoFetched(GraphUser user) {
+                if (user != null) {
+                    userId = ""+user.getId();
+                    String t4 = ""+user.getName();
+                    facebookTv.setText("Welcome, " + t4 + ". Click to logout");
+                } else {
+                    facebookTv.setText("Click to login with Facebook");
+                }
+            }
+        });
     }
 
     @Override
@@ -132,7 +130,6 @@ public class LoginActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
