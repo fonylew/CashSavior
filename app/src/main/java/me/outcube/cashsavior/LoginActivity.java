@@ -3,23 +3,101 @@ package me.outcube.cashsavior;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
+import com.facebook.widget.LoginButton.UserInfoChangedCallback;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 public class LoginActivity extends ActionBarActivity {
-    private ImageButton facebookLoginBtn;
     private Button mainActivityBtn;
+    private TextView facebookTv;
+
+    //facebook
+    private LoginButton facebookLoginBtn;
+    private UiLifecycleHelper uiHelper;
+
+    private Session.StatusCallback statusCallback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state,Exception exception) {
+            if (state.isOpened()) {
+                Log.d("FacebookSampleActivity", "Facebook session opened");
+            } else if (state.isClosed()) {
+                Log.d("FacebookSampleActivity", "Facebook session closed");
+            }
+        }
+    };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        uiHelper.onSaveInstanceState(savedState);
+    }
+
+    //facebook
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        uiHelper.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        uiHelper.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        //facebook
+        uiHelper = new UiLifecycleHelper(this, statusCallback);
+        uiHelper.onCreate(savedInstanceState);
+        //facebook
         findAllById();
+        facebookLoginBtn.setUserInfoChangedCallback(new UserInfoChangedCallback() {
+            @Override
+            public void onUserInfoFetched(GraphUser user) {
+                if (user != null) {
+                    //TODO: get user information
+                    String t1 = ""+user.getId();
+                    String t2 = ""+user.getLink();
+                    String t4 = ""+user.getName();
+                    String temp = t1+"\n"+t2+"\n"+t4;
+                    facebookTv.setText("Welcome, " + t4 + ". Click to logout");
+                } else {
+                    facebookTv.setText("Click to login with Facebook");
+                }
+            }
+        });
         initialize();
 
     }
@@ -34,7 +112,6 @@ public class LoginActivity extends ActionBarActivity {
             }
         });
 
-        //TODO set listener for facebookLoginBtn
     }
 
     @Override
@@ -60,7 +137,8 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     private void findAllById(){
-        facebookLoginBtn = (ImageButton) findViewById(R.id.facebook_btn);
+        facebookTv = (TextView) findViewById(R.id.facebook_tv);
+        facebookLoginBtn = (LoginButton) findViewById(R.id.facebook_btn);
         mainActivityBtn = (Button) findViewById(R.id.main_activity_btn);
     }
 }
