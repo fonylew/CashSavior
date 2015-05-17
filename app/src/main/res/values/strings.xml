@@ -1,10 +1,18 @@
 <resources>
     <string name="app_name">CashSavior</string>
+    <string name="title_activity_login">Cash Savior</string>
     <string name="app_id">445214508974444</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="test">Test</string>
-    <string name="title_activity_login">Cash Savior</string>
+
     <string name="title_activity_transaction">TransactionActivity</string>
     <string name="title_activity_category_popup">CategoryPopupActivity</string>
+
+    <string name="type1Name">Entertainment</string>
+    <string name="type2Name">Saving</string>
+    <string name="type3Name">Investment</string>
+    <string name="type4Name">Fixcost</string>
+    <string name="type5Name">Income</string>
+
 </resources>

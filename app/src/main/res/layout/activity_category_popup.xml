@@ -1,12 +1,100 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="me.outcube.cashsavior.CategoryPopupActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/curve_white"
+    android:gravity="center_horizontal|top"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    android:paddingTop="30dp">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-</RelativeLayout>
+        <View
+            android:layout_width="@dimen/fill_btn_size_normal"
+            android:layout_height="@dimen/fill_btn_size_normal"
+            android:background="@color/unfilled" />
+
+        <View
+            android:id="@+id/fill"
+            android:layout_width="@dimen/fill_btn_size_normal"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            android:background="@color/primaryColor" />
+
+        <ImageButton
+            android:id="@+id/mask"
+            android:layout_width="@dimen/fill_btn_size_normal"
+            android:layout_height="@dimen/fill_btn_size_normal"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mask_entertainment" />
+    </FrameLayout>
+
+    <util.FontTextView
+        android:id="@+id/type_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Entertainment"
+        android:textColor="@color/primaryColorDark"
+        android:textSize="15sp"
+        app:customFont="th-bold.otf" />
+
+    <util.FontTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="12dp"
+        android:text="Spent :" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|bottom"
+        android:orientation="horizontal">
+
+        <util.FontTextView
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3,456"
+            android:textColor="@color/primaryColorDark"
+            android:textSize="40sp" />
+
+        <util.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:text="Baht"
+            android:textColor="@color/primaryColorDark"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <include layout="@layout/divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/more_info_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/accentColor" />
+
+        <ImageButton
+            android:id="@+id/add_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/primaryColor" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -89,13 +89,13 @@ public class LoginActivity extends ActionBarActivity {
         mainActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (userId == null || userId.length() == 0) Toast.makeText(getApplication(),"Please login first.",Toast.LENGTH_LONG).show();
-                else {
+//                if (userId == null || userId.length() == 0) Toast.makeText(getApplication(),"Please login first.",Toast.LENGTH_LONG).show();
+//                else {
                     Intent mainActiviyIntent = new Intent(getApplicationContext(), MainActivity.class);
                     mainActiviyIntent.putExtra("userId", userId);
                     startActivity(mainActiviyIntent);
                     finish();
-                }
+//                }
             }
         });
         facebookLoginBtn.setUserInfoChangedCallback(new UserInfoChangedCallback() {

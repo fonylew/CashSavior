@@ -1,8 +1,10 @@
 package me.outcube.cashsavior;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.Signature;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +13,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.pm.PackageManager;
 
@@ -19,6 +23,8 @@ import com.facebook.Session;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import util.BlurBackgroundDialog;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -45,15 +51,47 @@ public class MainActivity extends ActionBarActivity {
         View.OnClickListener onClickImgButtonListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CategoryPopupActivity.class);
+                Dialog dialog = new Dialog(MainActivity.this);
+                dialog.setContentView(R.layout.activity_category_popup);
+                //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+                TextView typeName = (TextView) dialog.findViewById(R.id.type_name);
+                TextView amount = (TextView) dialog.findViewById(R.id.amount);
+                ImageButton moreInfo = (ImageButton) findViewById(R.id.more_info_btn);
+                ImageButton addTransaction = (ImageButton) findViewById(R.id.add_btn);
+
+                int typeNum = 0;
+
                 switch (view.getId()){
-                    case R.id.ent_btn: intent.putExtra("Type", 1); break;
-                    case R.id.sav_btn: intent.putExtra("Type", 2); break;
-                    case R.id.inv_btn: intent.putExtra("Type", 3); break;
-                    case R.id.fix_btn: intent.putExtra("Type", 4); break;
-                    case R.id.inc_btn: intent.putExtra("Type", 5); break;
+                    case R.id.ent_btn:
+                        typeName.setText(getResources().getString(R.string.type1Name));
+                        amount.setText("1,234");
+                        typeNum = 1;
+                        break;
+                    case R.id.sav_btn:
+                        typeName.setText(getResources().getString(R.string.type2Name));
+                        amount.setText("2,345");
+                        typeNum = 2;
+                        break;
+                    case R.id.inv_btn:
+                        typeName.setText(getResources().getString(R.string.type3Name));
+                        amount.setText("3,456");
+                        typeNum = 3;
+                        break;
+                    case R.id.fix_btn:
+                        typeName.setText(getResources().getString(R.string.type4Name));
+                        amount.setText("4,567");
+                        typeNum = 4;
+                        break;
+                    case R.id.inc_btn:
+                        typeName.setText(getResources().getString(R.string.type5Name));
+                        amount.setText("5,678");
+                        typeNum = 5;
+                        break;
+
                 }
-                startActivity(intent);
+                dialog.show();
             }
         };
         entImgBtn.setOnClickListener(onClickImgButtonListener);

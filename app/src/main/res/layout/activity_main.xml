@@ -19,12 +19,12 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="20dp">
 
             <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="50dp">
+                android:layout_height="wrap_content">
 
                 <View
                     android:layout_width="@dimen/fill_btn_size_normal"
@@ -50,7 +50,7 @@
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="50dp">
+                android:paddingTop="20dp">
 
                 <View
                     android:layout_width="@dimen/fill_btn_size_normal"
@@ -76,7 +76,7 @@
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="50dp">
+                android:paddingTop="20dp">
 
                 <View
                     android:layout_width="@dimen/fill_btn_size_normal"
@@ -104,12 +104,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_horizontal|top"
-                android:paddingTop="50dp">
+                android:paddingTop="20dp">
 
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingRight="50dp">
+                    android:paddingRight="30dp">
 
                     <View
                         android:layout_width="@dimen/fill_btn_size_small"
