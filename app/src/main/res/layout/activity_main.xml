@@ -27,21 +27,21 @@
                 android:paddingTop="50dp">
 
                 <View
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="@dimen/fill_btn_size_normal"
+                    android:layout_height="@dimen/fill_btn_size_normal"
                     android:background="@color/unfilled" />
 
                 <View
                     android:id="@+id/fill_ent"
-                    android:layout_width="150dp"
+                    android:layout_width="@dimen/fill_btn_size_normal"
                     android:layout_height="80dp"
                     android:layout_gravity="bottom"
                     android:background="@color/primaryColor" />
 
                 <ImageButton
                     android:id="@+id/ent_btn"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="@dimen/fill_btn_size_normal"
+                    android:layout_height="@dimen/fill_btn_size_normal"
                     android:background="@null"
                     android:scaleType="fitCenter"
                     android:src="@drawable/mask_entertainment" />
@@ -53,21 +53,21 @@
                 android:paddingTop="50dp">
 
                 <View
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="@dimen/fill_btn_size_normal"
+                    android:layout_height="@dimen/fill_btn_size_normal"
                     android:background="@color/unfilled" />
 
                 <View
                     android:id="@+id/fill_sav"
-                    android:layout_width="150dp"
+                    android:layout_width="@dimen/fill_btn_size_normal"
                     android:layout_height="30dp"
                     android:layout_gravity="bottom"
                     android:background="@color/primaryColor" />
 
                 <ImageButton
                     android:id="@+id/sav_btn"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="@dimen/fill_btn_size_normal"
+                    android:layout_height="@dimen/fill_btn_size_normal"
                     android:background="@null"
                     android:scaleType="fitCenter"
                     android:src="@drawable/mask_saving" />
@@ -79,25 +79,85 @@
                 android:paddingTop="50dp">
 
                 <View
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="@dimen/fill_btn_size_normal"
+                    android:layout_height="@dimen/fill_btn_size_normal"
                     android:background="@color/unfilled" />
 
                 <View
                     android:id="@+id/fill_inv"
-                    android:layout_width="150dp"
+                    android:layout_width="@dimen/fill_btn_size_normal"
                     android:layout_height="120dp"
                     android:layout_gravity="bottom"
                     android:background="@color/primaryColor" />
 
                 <ImageButton
                     android:id="@+id/inv_btn"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="@dimen/fill_btn_size_normal"
+                    android:layout_height="@dimen/fill_btn_size_normal"
                     android:background="@null"
                     android:scaleType="fitCenter"
                     android:src="@drawable/mask_invest" />
             </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal|top"
+                android:paddingTop="50dp">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="50dp">
+
+                    <View
+                        android:layout_width="@dimen/fill_btn_size_small"
+                        android:layout_height="@dimen/fill_btn_size_small"
+                        android:background="@color/unfilled" />
+
+                    <View
+                        android:id="@+id/fill_fix"
+                        android:layout_width="@dimen/fill_btn_size_small"
+                        android:layout_height="80dp"
+                        android:layout_gravity="bottom"
+                        android:background="@color/primaryColor" />
+
+                    <ImageButton
+                        android:id="@+id/fix_btn"
+                        android:layout_width="@dimen/fill_btn_size_small"
+                        android:layout_height="@dimen/fill_btn_size_small"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/mask_fixcost" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="@dimen/fill_btn_size_small"
+                        android:layout_height="@dimen/fill_btn_size_small"
+                        android:background="@color/unfilled" />
+
+                    <View
+                        android:id="@+id/fill_inc"
+                        android:layout_width="@dimen/fill_btn_size_small"
+                        android:layout_height="80dp"
+                        android:layout_gravity="bottom"
+                        android:background="@color/primaryColor" />
+
+                    <ImageButton
+                        android:id="@+id/inc_btn"
+                        android:layout_width="@dimen/fill_btn_size_small"
+                        android:layout_height="@dimen/fill_btn_size_small"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/mask_income" />
+                </FrameLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
