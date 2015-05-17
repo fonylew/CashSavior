@@ -24,10 +24,10 @@
 
     <com.facebook.widget.LoginButton
         android:id="@+id/facebook_btn"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/facebook_login_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/facebook_login_btn"
+        android:padding="30dp"
         facebook:confirm_logout="false"
         facebook:fetch_user_info="true"/>
     <TextView
