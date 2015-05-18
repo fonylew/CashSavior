@@ -28,7 +28,7 @@ import util.BlurBackgroundDialog;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    final private int TRANSACTION_REQUEST = 0;
     private Toolbar toolbar;
     private String userId;
     private ImageButton entImgBtn, savImgBtn, invImgBtn, fixImgBtn, incImgBtn;
@@ -58,8 +58,8 @@ public class MainActivity extends ActionBarActivity {
 
                 TextView typeName = (TextView) dialog.findViewById(R.id.type_name);
                 TextView amount = (TextView) dialog.findViewById(R.id.amount);
-                ImageButton moreInfo = (ImageButton) findViewById(R.id.more_info_btn);
-                ImageButton addTransaction = (ImageButton) findViewById(R.id.add_btn);
+                ImageButton moreInfo = (ImageButton) dialog.findViewById(R.id.more_info_btn);
+                ImageButton addTransaction = (ImageButton) dialog.findViewById(R.id.add_btn);
 
                 int typeNum = 0;
 
@@ -89,8 +89,17 @@ public class MainActivity extends ActionBarActivity {
                         amount.setText("5,678");
                         typeNum = 5;
                         break;
-
                 }
+                final int finalTypeNum = typeNum;
+
+                addTransaction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent transactionIntent = new Intent(MainActivity.this, TransactionActivity.class);
+                        transactionIntent.putExtra("typeNum", finalTypeNum);
+                        startActivityForResult(transactionIntent, TRANSACTION_REQUEST);
+                    }
+                });
                 dialog.show();
             }
         };
@@ -99,6 +108,14 @@ public class MainActivity extends ActionBarActivity {
         invImgBtn.setOnClickListener(onClickImgButtonListener);
         fixImgBtn.setOnClickListener(onClickImgButtonListener);
         incImgBtn.setOnClickListener(onClickImgButtonListener);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == TRANSACTION_REQUEST) {
+            if (resultCode == RESULT_OK) {
+
+            }
+        }
     }
     
     @Override
