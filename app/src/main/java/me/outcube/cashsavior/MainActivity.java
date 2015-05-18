@@ -113,7 +113,13 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TRANSACTION_REQUEST) {
             if (resultCode == RESULT_OK) {
+                int typeNum = data.getIntExtra("typeNum", -1);
+                int subTypeNum = data.getIntExtra("subTypeNum", -1);
+                int amount = data.getIntExtra("amount", -1);
+                String note = data.getStringExtra("note");
 
+                String s = "type:"+typeNum+" subType:"+subTypeNum+" amount:"+amount+" note:"+note;
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
             }
         }
     }

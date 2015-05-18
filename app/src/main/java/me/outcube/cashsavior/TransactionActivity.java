@@ -1,18 +1,40 @@
 package me.outcube.cashsavior;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.Toast;
+
+import adapter.SubTypeGridAdapter;
+import adapter.SubTypeResPair;
 
 
 public class TransactionActivity extends ActionBarActivity {
+    public static final String SUBTYPE_NAME[][] = {
+            {"อาหารมื้อพิเศษ", "ขนมและเครื่องดื่ม", "ชมภาพยนต์", "เครื่องแต่งกายแบรนด์เนม", "ท่องเที่ยว", "ทำบุญ", "ของขวัญ"},
+            {"ฝากธนาคาร", "ซื้อสลากออมสิน", "ซื้อพันธบัตรรัฐบาล"},
+            {"เงินลงทุน", "ขยายกิจการ", "ซื้อหุ้น", "ซื้อทองคำ", "เรียนรู้ทักษะ"}};
+
+    public static final int SUBTYPE_imgId[][] = {
+            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food},
+            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food},
+            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food}};
 
     private int typeNum;
     private Toolbar toolbar;
+    private EditText amount, note;
+    private GridView subTypeGridView;
+    private int selectedSubTypeNum;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +52,26 @@ public class TransactionActivity extends ActionBarActivity {
 
         Intent oldIntent = getIntent();
         typeNum = oldIntent.getIntExtra("typeNum", 0);
-        if(typeNum == 0){
-            Toast.makeText(getApplicationContext(), "Error: typeNum = 0", Toast.LENGTH_SHORT).show();
-            finish();
+        if(typeNum==0) {finish();}
+
+        SubTypeResPair[] thisSubTypeResource = new SubTypeResPair[SUBTYPE_NAME[typeNum-1].length];
+        for(int i=0; i<SUBTYPE_NAME[typeNum-1].length; i++){
+            Drawable d = getResources().getDrawable(SUBTYPE_imgId[typeNum-1][i]);
+            thisSubTypeResource[i] = new SubTypeResPair(d, SUBTYPE_NAME[typeNum-1][i]);
         }
 
-        Toast.makeText(getApplicationContext(), "typeNum = "+typeNum, Toast.LENGTH_SHORT).show();
+        SubTypeGridAdapter adapter = new SubTypeGridAdapter(
+                getApplicationContext(),
+                R.layout.subtype_gridview_item,
+                thisSubTypeResource);
+        subTypeGridView.setAdapter(adapter);
+        subTypeGridView.setSelector(R.color.accentColor);
+        subTypeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedSubTypeNum = i;
+            }
+        });
     }
 
     @Override
@@ -54,7 +90,13 @@ public class TransactionActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_done) {
-            Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_SHORT).show();
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("typeNum", typeNum);
+            returnIntent.putExtra("subTypeNum", selectedSubTypeNum+1);
+            returnIntent.putExtra("amount", Integer.parseInt(amount.getText().toString()));
+            returnIntent.putExtra("note", note.getText().toString());
+            setResult(RESULT_OK, returnIntent);
+            finish();
             return true;
         }
 
@@ -63,5 +105,8 @@ public class TransactionActivity extends ActionBarActivity {
 
     private void findAllById(){
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+        amount = (EditText) findViewById(R.id.amount);
+        note = (EditText) findViewById(R.id.note);
+        subTypeGridView = (GridView) findViewById(R.id.subtype_grid);
     }
 }

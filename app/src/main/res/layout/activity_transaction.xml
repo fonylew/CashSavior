@@ -17,28 +17,44 @@
             android:orientation="vertical"
             android:padding="@dimen/activity_horizontal_margin">
 
-            <LinearLayout
-                android:id="@+id/choose_group_btn"
+            <util.FontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Choose Your Transaction" />
+
+            <!--<LinearLayout-->
+            <!--android:id="@+id/choose_group_btn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/curve_white"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:padding="10dp">-->
+
+            <!--<ImageView-->
+            <!--android:layout_width="60dp"-->
+            <!--android:layout_height="60dp" />-->
+
+            <!--<util.FontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:text="Choose Group"-->
+            <!--android:textSize="20sp" />-->
+
+            <!--</LinearLayout>-->
+
+            <GridView
+                android:id="@+id/subtype_grid"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/curve_white"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="10dp">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp" />
-
-                <util.FontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:text="Choose Group"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
+                android:numColumns="3"
+                android:padding="10dp"
+                android:horizontalSpacing="5dp"
+                android:verticalSpacing="5dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,15 +68,15 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/curve_white"/>
+                    android:src="@drawable/curve_white" />
 
                 <EditText
                     android:id="@+id/amount"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:layout_marginLeft="10dp"
                     android:hint="Enter amount of money"
                     android:inputType="number" />
 
@@ -78,14 +94,14 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/curve_white"/>
+                    android:src="@drawable/curve_white" />
 
                 <EditText
                     android:id="@+id/note"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
                     android:layout_marginLeft="10dp"
+                    android:layout_weight="3"
                     android:gravity="center"
                     android:hint="Note"
                     android:inputType="text" />
