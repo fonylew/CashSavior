@@ -1,37 +1,45 @@
 package me.outcube.cashsavior;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.Signature;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.pm.PackageManager;
 
-import com.facebook.Session;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import util.BlurBackgroundDialog;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import history.HistoryDatabase;
+import history.HistoryLog;
 
 
 public class MainActivity extends ActionBarActivity {
     final private int TRANSACTION_REQUEST = 0;
+    private ProgressDialog prgDialog;
     private Toolbar toolbar;
-    private String userId;
+    public static String userId;
+    public static HistoryDatabase historyDatabase;
     private ImageButton entImgBtn, savImgBtn, invImgBtn, fixImgBtn, incImgBtn;
     private View entFill, savFill, invFill, fixFill, incFill;
 
@@ -45,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
 
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_nav_drawer);
-        drawerFragment.setup((DrawerLayout)findViewById(R.id.drawer_layout), toolbar);
+        drawerFragment.setup((DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
 
         findViewById();
         initialize();
@@ -54,6 +62,10 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initialize(){
+        historyDatabase = new HistoryDatabase(this);
+        prgDialog = new ProgressDialog(this);
+        prgDialog.setMessage("Please wait...");
+        prgDialog.setCancelable(false);
         View.OnClickListener onClickImgButtonListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,10 +135,12 @@ public class MainActivity extends ActionBarActivity {
                 int subTypeNum = data.getIntExtra("subTypeNum", -1);
                 int amount = data.getIntExtra("amount", -1);
                 String note = data.getStringExtra("note");
-
-                //To Mint: when typeNum = 4, 5 subTypeNum will always be -1 (subTypeNum field is not use)
-                String s = "type:"+typeNum+" subType:"+subTypeNum+" amount:"+amount+" note:"+note;
-                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = new Date();
+                String datemsg = dateFormat.format(date).toString();
+                if (typeNum == 4 || typeNum == 5) subTypeNum = 1;
+                historyDatabase.addHistory(new HistoryLog(typeNum,subTypeNum,amount,datemsg,note));
+                syncTransection();
             }
         }
     }
@@ -169,4 +183,67 @@ public class MainActivity extends ActionBarActivity {
         incImgBtn = (ImageButton) findViewById(R.id.inc_btn);
         incFill = findViewById(R.id.fill_inc);
     }
+
+    private void syncTransection() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        List<HistoryLog> historyList = historyDatabase.getAllHistory();
+        ArrayList<HistoryLog> userList = new ArrayList<HistoryLog>();
+        for (int i = 0; i < historyList.size(); i++) {
+            userList.add(historyList.get(i));
+        }
+        if(userList.size()!=0){
+            if(historyDatabase.dbSyncCount() != 0){
+                params.put("usersJSON", historyDatabase.composeJSONfromSQLite());
+                client.post("http://outcube.me/cashsavior/cash_addTransection.php",params ,new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(String response) {
+                        try {
+                            JSONArray arr = new JSONArray(response);
+                            for(int i=0; i<arr.length();i++){
+                                JSONObject obj = (JSONObject)arr.get(i);
+                                HistoryLog hislog = new HistoryLog();
+                                hislog.setTypeid(Integer.parseInt(obj.get("typeid").toString()));
+                                hislog.setSubid(Integer.parseInt(obj.get("subid").toString()));
+                                hislog.setAmount(Integer.parseInt(obj.get("amount").toString()));
+                                hislog.setDate(obj.get("date").toString());
+                                hislog.setNote(obj.get("note").toString());
+                                historyDatabase.updateSyncStatus(hislog,obj.get("status").toString());
+                            }
+                            Toast.makeText(getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Throwable error,String content) {
+                        if(statusCode == 404){
+                            Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                        }else if(statusCode == 500){
+                            Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet]", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onStart() {
+                        prgDialog.show();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        prgDialog.dismiss();
+                    }
+                });
+            }else{
+                Toast.makeText(getApplicationContext(), "SQLite and Remote MySQL DBs are in Sync!", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(getApplicationContext(), "No data in SQLite DB, please do enter data to perform Sync action", Toast.LENGTH_LONG).show();
+        }
+    }
+
 }
