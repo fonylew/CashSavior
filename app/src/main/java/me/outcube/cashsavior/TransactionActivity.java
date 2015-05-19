@@ -1,11 +1,11 @@
 package me.outcube.cashsavior;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,15 +19,21 @@ import adapter.SubTypeResPair;
 
 
 public class TransactionActivity extends ActionBarActivity {
-    public static final String SUBTYPE_NAME[][] = {
-            {"อาหารมื้อพิเศษ", "ขนมและเครื่องดื่ม", "ชมภาพยนต์", "เครื่องแต่งกายแบรนด์เนม", "ท่องเที่ยว", "ทำบุญ", "ของขวัญ"},
-            {"ฝากธนาคาร", "ซื้อสลากออมสิน", "ซื้อพันธบัตรรัฐบาล"},
-            {"เงินลงทุน", "ขยายกิจการ", "ซื้อหุ้น", "ซื้อทองคำ", "เรียนรู้ทักษะ"}};
+    public static final int SUBTYPE_NAME_ID[][] = {
+            {R.string.subtype1_1, R.string.subtype1_2, R.string.subtype1_3,
+                    R.string.subtype1_4, R.string.subtype1_5, R.string.subtype1_6,
+                    R.string.subtype1_7},
+            {R.string.subtype2_1,R.string.subtype2_2,R.string.subtype2_3, },
+            {R.string.subtype3_1, R.string.subtype3_2, R.string.subtype3_3,
+                    R.string.subtype3_4, R.string.subtype3_5}};
 
-    public static final int SUBTYPE_imgId[][] = {
-            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food},
+    public static final int SUBTYPE_IMG_ID[][] = {
+            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,
+                    R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food
+                    ,R.drawable.subtype_food},
             {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food},
-            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food}};
+            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,
+                    R.drawable.subtype_food,R.drawable.subtype_food}};
 
     private int typeNum;
     private Toolbar toolbar;
@@ -53,25 +59,45 @@ public class TransactionActivity extends ActionBarActivity {
         Intent oldIntent = getIntent();
         typeNum = oldIntent.getIntExtra("typeNum", 0);
         if(typeNum==0) {finish();}
+        else if(typeNum<=3){
+            SubTypeResPair[] thisSubTypeResource = new SubTypeResPair[SUBTYPE_NAME_ID[typeNum-1].length];
+            for(int i=0; i<SUBTYPE_NAME_ID[typeNum-1].length; i++){
+                Drawable d = getResources().getDrawable(SUBTYPE_IMG_ID[typeNum-1][i]);
+                String s = getResources().getString(SUBTYPE_NAME_ID[typeNum-1][i]);
+                thisSubTypeResource[i] = new SubTypeResPair(d, s);
+            }
 
-        SubTypeResPair[] thisSubTypeResource = new SubTypeResPair[SUBTYPE_NAME[typeNum-1].length];
-        for(int i=0; i<SUBTYPE_NAME[typeNum-1].length; i++){
-            Drawable d = getResources().getDrawable(SUBTYPE_imgId[typeNum-1][i]);
-            thisSubTypeResource[i] = new SubTypeResPair(d, SUBTYPE_NAME[typeNum-1][i]);
+            selectedSubTypeNum = 0;
+            final SubTypeGridAdapter adapter = new SubTypeGridAdapter(
+                    getApplicationContext(),
+                    R.layout.subtype_gridview_item,
+                    thisSubTypeResource);
+            subTypeGridView.setAdapter(adapter);
+            subTypeGridView.setSelected(true);
+            subTypeGridView.setChoiceMode(GridView.CHOICE_MODE_SINGLE);
+            subTypeGridView.setDrawSelectorOnTop(false);
+            subTypeGridView.setSelector(R.drawable.curve_yellow);
+            subTypeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    for (int j=0; j<adapterView.getCount(); j++) {
+                        try {
+                            if(j!=i) adapterView.getChildAt(j).setBackgroundResource(R.color.white);
+                        } catch (NullPointerException e){
+                            //TODO fix error
+                            Log.d("myLog", "error at child number:"+j);
+                        }
+                    }
+                    view.setBackgroundResource(R.drawable.curve_yellow);
+                    selectedSubTypeNum = i;
+                }
+            });
+        } else {
+            selectedSubTypeNum = -2;
+            subTypeGridView.setVisibility(View.GONE);
         }
 
-        SubTypeGridAdapter adapter = new SubTypeGridAdapter(
-                getApplicationContext(),
-                R.layout.subtype_gridview_item,
-                thisSubTypeResource);
-        subTypeGridView.setAdapter(adapter);
-        subTypeGridView.setSelector(R.color.accentColor);
-        subTypeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedSubTypeNum = i;
-            }
-        });
+
     }
 
     @Override

@@ -20,7 +20,7 @@
             <util.FontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Choose Your Transaction" />
+                android:text="Complete Your Transaction" />
 
             <!--<LinearLayout-->
             <!--android:id="@+id/choose_group_btn"-->

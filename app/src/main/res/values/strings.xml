@@ -17,4 +17,24 @@
     <string name="type5Name">Income</string>
     <string name="title_activity_history">HistoryActivity</string>
 
+    <string name="subtype1_1">อาหารมื้อพิเศษ</string>
+    <string name="subtype1_2">ขนมและเครื่องดื่ม</string>
+    <string name="subtype1_3">ชมภาพยนต์</string>
+    <string name="subtype1_4">สินค้าแบรนด์เนม</string>
+    <string name="subtype1_5">ท่องเที่ยว</string>
+    <string name="subtype1_6">ทำบุญ</string>
+    <string name="subtype1_7">ของขวัญ</string>
+
+    <string name="subtype2_1">ฝากธนาคาร</string>
+    <string name="subtype2_2">ซื้อสลากออมสิน</string>
+    <string name="subtype2_3">ซื้อพันธบัตรรัฐบาล</string>
+
+    <string name="subtype3_1">เงินลงทุน</string>
+    <string name="subtype3_2">ขยายกิจการ</string>
+    <string name="subtype3_3">ซื้อหุ้น</string>
+    <string name="subtype3_4">ซื้อทองคำ</string>
+    <string name="subtype3_5">เรียนรู้ทักษะ</string>
+
+
+
 </resources>

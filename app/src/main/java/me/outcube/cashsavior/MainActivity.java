@@ -118,6 +118,7 @@ public class MainActivity extends ActionBarActivity {
                 int amount = data.getIntExtra("amount", -1);
                 String note = data.getStringExtra("note");
 
+                //To Mint: when typeNum = 4, 5 subTypeNum will always be -1 (subTypeNum field is not use)
                 String s = "type:"+typeNum+" subType:"+subTypeNum+" amount:"+amount+" note:"+note;
                 Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
             }
