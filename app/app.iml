@@ -91,6 +91,7 @@
     <orderEntry type="library" exported="" name="android-async-http-1.4.4" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.1.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.1.1" level="project" />
+    <orderEntry type="library" exported="" name="support-v13-22.1.1" level="project" />
     <orderEntry type="module" module-name="FacebookSDK" exported="" />
   </component>
 </module>
