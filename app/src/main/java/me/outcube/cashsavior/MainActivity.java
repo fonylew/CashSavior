@@ -47,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -81,6 +82,8 @@ public class MainActivity extends ActionBarActivity {
 
                 int typeNum = 0;
 
+                //TODO To Mint: set amount for each Type in amount.setText(amount+"");
+                // don't forget to add blank string in setText() or it will crash
                 switch (view.getId()){
                     case R.id.ent_btn:
                         typeName.setText(getResources().getString(R.string.type1Name));

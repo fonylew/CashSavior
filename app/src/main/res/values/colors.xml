@@ -3,7 +3,9 @@
     <color name="primaryColor">#00BCD4</color>
     <color name="primaryColorDark">#0097A7</color>
     <color name="accentColor">#FFEB3B</color>
+    <color name="accentColorLite">#FFF176</color>
 
     <color name="white">#FFFFFF</color>
     <color name="unfilled">#DDDDDD</color>
+    <color name="gray">#DDDDDD</color>
 </resources>

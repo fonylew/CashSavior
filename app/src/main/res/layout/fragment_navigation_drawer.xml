@@ -1,14 +1,116 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="me.outcube.cashsavior.NavigationDrawerFragment"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:gravity="clip_horizontal|top"
+    android:orientation="vertical"
+    tools:context="me.outcube.cashsavior.NavigationDrawerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="156dp"
+        android:background="@color/accentColor">
 
-</RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/accentColor"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <ImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/curve_white"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="100dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical|left">
+
+            <util.FontTextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Firstname Surname"/>
+
+            <util.FontTextView
+                android:id="@+id/email"
+                android:layout_marginTop="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="email_whatever@gmail.com"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray" />
+
+    <LinearLayout
+        android:id="@+id/home_btn"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <ImageView
+            android:id="@+id/home_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/curve_yellow" />
+
+        <util.FontTextView
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:text="Home Menu" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/history_btn"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <ImageView
+            android:id="@+id/history_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/curve_yellow" />
+
+        <util.FontTextView
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:text="History" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray" />
+
+
+</LinearLayout>
