@@ -1,6 +1,9 @@
 package me.outcube.cashsavior;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,11 +20,23 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class LoginActivity extends ActionBarActivity {
     private Button mainActivityBtn;
+    private ProgressDialog prgDialog;
 
     //facebook
     private TextView facebookTv;
@@ -41,6 +56,10 @@ public class LoginActivity extends ActionBarActivity {
     };
 
     //facebook
+
+    public static boolean isNetworkAvailable(Context context) {
+        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -89,13 +108,11 @@ public class LoginActivity extends ActionBarActivity {
         mainActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (userId == null || userId.length() == 0) Toast.makeText(getApplication(),"Please login first.",Toast.LENGTH_LONG).show();
-//                else {
-                    Intent mainActiviyIntent = new Intent(getApplicationContext(), MainActivity.class);
-                    mainActiviyIntent.putExtra("userId", userId);
-                    startActivity(mainActiviyIntent);
-                    finish();
-//                }
+                if (userId == null || userId.length() == 0) Toast.makeText(getApplication(),"Please login first.",Toast.LENGTH_LONG).show();
+                else {
+                    if (isNetworkAvailable(getApplicationContext())) connectUserToServer();
+                    else Toast.makeText(getApplicationContext(),"No internet connection.\nPlease connect to the internet and retry.",Toast.LENGTH_LONG).show();
+                }
             }
         });
         facebookLoginBtn.setUserInfoChangedCallback(new UserInfoChangedCallback() {
@@ -110,6 +127,9 @@ public class LoginActivity extends ActionBarActivity {
                 }
             }
         });
+        prgDialog = new ProgressDialog(this);
+        prgDialog.setMessage("Please wait...");
+        prgDialog.setCancelable(false);
     }
 
     @Override
@@ -138,4 +158,39 @@ public class LoginActivity extends ActionBarActivity {
         facebookLoginBtn = (LoginButton) findViewById(R.id.facebook_btn);
         mainActivityBtn = (Button) findViewById(R.id.main_activity_btn);
     }
+
+    private void connectUserToServer() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        ArrayList<HashMap<String, String>> userList = new ArrayList<HashMap<String, String>>();
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("userId", userId);
+        userList.add(map);
+        Gson gson = new GsonBuilder().create();
+        params.put("usersJSON", gson.toJson(userList));
+        client.post("http://outcube.me/cashsavior/cash_adduser.php", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+            }
+
+            @Override
+            public void onFailure(int statusCode, Throwable error, String content) {
+            }
+
+            @Override
+            public void onStart() {
+                prgDialog.show();
+            }
+
+            @Override
+            public void onFinish() {
+                Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+                mainActivityIntent.putExtra("userId", userId);
+                prgDialog.dismiss();
+                startActivity(mainActivityIntent);
+                finish();
+            }
+        });
+    }
+
 }
