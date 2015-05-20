@@ -84,13 +84,11 @@ public class HistoryDatabase extends SQLiteOpenHelper {
     }
 
     // Getting All history
-    public List<HistoryLog> getAllHistory() {
-        List<HistoryLog> historyList = new ArrayList<HistoryLog>();
-        // Select All Query
+    public ArrayList<HistoryLog> getAllHistory(){
+        ArrayList<HistoryLog> historyLogs = new ArrayList<HistoryLog>();
         String selectQuery = "SELECT  * FROM " + TABLE_TRANSECTION;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        // looping through all rows and adding to list
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
                 HistoryLog historyLog = new HistoryLog();
@@ -99,22 +97,11 @@ public class HistoryDatabase extends SQLiteOpenHelper {
                 historyLog.setAmount(Integer.parseInt(cursor.getString(2)));
                 historyLog.setDate(cursor.getString(3));
                 historyLog.setNote(cursor.getString(4));
-                // Adding history to list
-                historyList.add(historyLog);
+                historyLogs.add(historyLog);
             } while (cursor.moveToNext());
         }
-        // return contact list
-        return historyList;
-    }
-
-    // Getting history Count
-    public int getHistoryCount() {
-        String historyQuery = "SELECT  * FROM " + TABLE_TRANSECTION;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(historyQuery, null);
-        int count = cursor.getCount();
-        cursor.close();
-        return count;
+        database.close();
+        return historyLogs;
     }
 
     public void deleteAll() {
@@ -162,6 +149,28 @@ public class HistoryDatabase extends SQLiteOpenHelper {
         database.close();
         return historyLogs;
     }
+
+    public ArrayList<HistoryLog> getCategoryHistory(int type){
+        ArrayList<HistoryLog> historyLogs = new ArrayList<HistoryLog>();
+        String selectQuery = "SELECT  * FROM " + TABLE_TRANSECTION + " where " + KEY_TYPEID + " = '"+ type + "'";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HistoryLog historyLog = new HistoryLog();
+                historyLog.setTypeid(Integer.parseInt(cursor.getString(0)));
+                historyLog.setSubid(Integer.parseInt(cursor.getString(1)));
+                historyLog.setAmount(Integer.parseInt(cursor.getString(2)));
+                historyLog.setDate(cursor.getString(3));
+                historyLog.setNote(cursor.getString(4));
+                historyLogs.add(historyLog);
+            } while (cursor.moveToNext());
+        }
+        database.close();
+        return historyLogs;
+    }
+
+
 
     public String composeJSONfromSQLite(){
         ArrayList<HistoryLog> historyLogs = new ArrayList<HistoryLog>();

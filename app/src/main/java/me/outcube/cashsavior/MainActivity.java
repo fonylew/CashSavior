@@ -45,6 +45,7 @@ public class MainActivity extends ActionBarActivity {
     private ProgressDialog prgDialog;
     private Toolbar toolbar;
     public static String userId;
+    public static String userName;
     public static HistoryDatabase historyDatabase;
     private ImageButton entImgBtn, savImgBtn, invImgBtn, fixImgBtn, incImgBtn;
     private View entFill, savFill, invFill, fixFill, incFill;
@@ -70,6 +71,7 @@ public class MainActivity extends ActionBarActivity {
         initialize();
         Intent previousIntent = getIntent();
         userId = previousIntent.getStringExtra("userId");
+        userName = previousIntent.getStringExtra("userName");
     }
 
     private void getPreviousData() {
