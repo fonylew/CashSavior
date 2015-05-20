@@ -69,6 +69,20 @@ public class HistoryDatabase extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
+    public void addHistory(HistoryLog historyLog, String status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_TYPEID, historyLog.getTypeid());
+        values.put(KEY_SUBID, historyLog.getSubid());
+        values.put(KEY_AMOUNT, historyLog.getAmount());
+        values.put(KEY_DATE, historyLog.getDate());
+        values.put(KEY_NOTE, historyLog.getNote());
+        values.put(KEY_STATUS, status);
+        // Inserting Row
+        db.insert(TABLE_TRANSECTION, null, values);
+        db.close(); // Closing database connection
+    }
+
     // Getting All history
     public List<HistoryLog> getAllHistory() {
         List<HistoryLog> historyList = new ArrayList<HistoryLog>();
@@ -127,6 +141,26 @@ public class HistoryDatabase extends SQLiteOpenHelper {
                 KEY_NOTE + " = " + "'" + history.getNote() + "'";
         database.execSQL(updateQuery);
         database.close();
+    }
+
+    public ArrayList<HistoryLog> getUnsyncHistory(){
+        ArrayList<HistoryLog> historyLogs = new ArrayList<HistoryLog>();
+        String selectQuery = "SELECT  * FROM " + TABLE_TRANSECTION + " where " + KEY_STATUS + " = '"+"no"+"'";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HistoryLog historyLog = new HistoryLog();
+                historyLog.setTypeid(Integer.parseInt(cursor.getString(0)));
+                historyLog.setSubid(Integer.parseInt(cursor.getString(1)));
+                historyLog.setAmount(Integer.parseInt(cursor.getString(2)));
+                historyLog.setDate(cursor.getString(3));
+                historyLog.setNote(cursor.getString(4));
+                historyLogs.add(historyLog);
+            } while (cursor.moveToNext());
+        }
+        database.close();
+        return historyLogs;
     }
 
     public String composeJSONfromSQLite(){

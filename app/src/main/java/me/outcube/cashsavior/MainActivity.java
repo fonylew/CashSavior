@@ -17,6 +17,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -31,6 +33,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import history.HistoryDatabase;
@@ -69,8 +72,8 @@ public class MainActivity extends ActionBarActivity {
         userId = previousIntent.getStringExtra("userId");
     }
 
-    private void getPreviousData(){
-        //TODO: sync server
+    private void getPreviousData() {
+        historyDatabase = new HistoryDatabase(this);
         todayDate = new Date();
         boolean differenceMonth = false;
         SharedPreferences orderData = getSharedPreferences("order", Context.MODE_APPEND);
@@ -97,10 +100,92 @@ public class MainActivity extends ActionBarActivity {
             totalEnt = totalFix = totalInc = totalInv = totalSav = 0;
             fillEnt = fillSav = fillInv = 0;
         }
+        getHistoryFromServer();
+    }
+
+    private void getHistoryFromServer() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        ArrayList<HashMap<String, String>> userList = new ArrayList<HashMap<String, String>>();
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("userId", userId);
+        userList.add(map);
+        Gson gson = new GsonBuilder().create();
+        params.put("usersJSON", gson.toJson(userList));
+        client.post("http://outcube.me/cashsavior/cash_gethistory.php", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                try {
+                    JSONArray arr = new JSONArray(response);
+                    ArrayList<HistoryLog> unsynchistory = historyDatabase.getUnsyncHistory();
+                    historyDatabase.deleteAll();
+                    totalEnt = totalFix = totalInc = totalInv = totalSav = 0;
+                    for(int i=0; i<arr.length();i++){
+                        JSONObject obj = (JSONObject)arr.get(i);
+                        String date = obj.get("date").toString();
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            Date getDate = dateFormat.parse(date);
+                            if (todayDate.getMonth() == getDate.getMonth() && todayDate.getYear() == getDate.getYear()) {
+                                int t = Integer.parseInt(obj.get("typeid").toString());
+                                int a = Integer.parseInt(obj.get("amount").toString());
+                                switch (t) {
+                                    case 1: {totalEnt += a; break;}
+                                    case 2: {totalSav += a; break;}
+                                    case 3: {totalInv += a; break;}
+                                    case 4: {totalFix += a; break;}
+                                    case 5: {totalInc += a; break;}
+                                }
+                                HistoryLog hislog = new HistoryLog();
+                                hislog.setTypeid(t);
+                                hislog.setSubid(Integer.parseInt(obj.get("subid").toString()));
+                                hislog.setAmount(a);
+                                hislog.setDate(date);
+                                hislog.setNote(obj.get("note").toString());
+                                historyDatabase.addHistory(hislog,"yes");
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    for (int i = 0; i < unsynchistory.size(); i++) {
+                        HistoryLog temp = unsynchistory.get(i);
+                        switch (temp.getTypeid()) {
+                            case 1: {totalEnt += temp.getAmount(); break;}
+                            case 2: {totalSav += temp.getAmount(); break;}
+                            case 3: {totalInv += temp.getAmount(); break;}
+                            case 4: {totalFix += temp.getAmount(); break;}
+                            case 5: {totalInc += temp.getAmount(); break;}
+                        }
+                        historyDatabase.addHistory(temp);
+                    }
+                    fillEnt = calculatePercent(1);
+                    fillSav = calculatePercent(2);
+                    fillInv = calculatePercent(3);
+                    Toast.makeText(getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Throwable error, String content) {
+            }
+
+            @Override
+            public void onStart() {
+                prgDialog.show();
+            }
+
+            @Override
+            public void onFinish() {
+                prgDialog.dismiss();
+            }
+        });
     }
 
     private void initialize(){
-        historyDatabase = new HistoryDatabase(this);
         prgDialog = new ProgressDialog(this);
         prgDialog.setMessage("Please wait...");
         prgDialog.setCancelable(false);
