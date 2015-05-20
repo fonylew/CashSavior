@@ -47,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
     private View entFill, savFill, invFill, fixFill, incFill;
     private Date todayDate;
     private int totalEnt, totalSav, totalInv, totalFix, totalInc;
+    //TODO Ong: these 3 variables are %.
     private float fillEnt, fillSav, fillInv;
 
     @Override
@@ -185,17 +186,45 @@ public class MainActivity extends ActionBarActivity {
                 Date date = new Date();
                 String datemsg = dateFormat.format(date);
                 if (typeNum == 4 || typeNum == 5) subTypeNum = 1;
-                historyDatabase.addHistory(new HistoryLog(typeNum,subTypeNum,amount,datemsg,note));
-                switch (typeNum) {
-                    case 1: {totalEnt += amount; break;}
-                    case 2: {totalSav += amount; break;}
-                    case 3: {totalInv += amount; break;}
-                    case 4: {totalFix += amount; break;}
-                    case 5: {totalInc += amount; break;}
+                if (typeNum == 4) {
+                    if (totalFix + amount > totalInc) Toast.makeText(getApplicationContext(),"Income > Fixcost is not allowed",Toast.LENGTH_LONG).show();
+                    else {
+                        historyDatabase.addHistory(new HistoryLog(typeNum,subTypeNum,amount,datemsg,note));
+                        totalFix += amount;
+                        syncTransection();
+                    }
+                } else {
+                    historyDatabase.addHistory(new HistoryLog(typeNum,subTypeNum,amount,datemsg,note));
+                    switch (typeNum) {
+                        case 1: {totalEnt += amount; fillEnt = calculatePercent(1); break;}
+                        case 2: {totalSav += amount; fillSav = calculatePercent(2); break;}
+                        case 3: {totalInv += amount; fillInv = calculatePercent(3); break;}
+                        case 5: {totalInc += amount; break;}
+                    }
+                    syncTransection();
                 }
-                syncTransection();
             }
         }
+    }
+
+    private float calculatePercent(int type) {
+        float total = ((float)(totalInc - totalFix))/4;
+        float total2 = ((float)(totalInc - totalFix))/2;
+        switch (type) {
+            case 1: {
+                if (totalEnt > total) return 2;
+                else return ((float)totalEnt)/total;
+            }
+            case 2: {
+                if (totalSav > total) return 2;
+                else return ((float)totalSav)/total;
+            }
+            case 3: {
+                if (totalInv > total2) return 2;
+                else return ((float)totalInv)/total2;
+            }
+        }
+        return 0;
     }
     
     @Override
