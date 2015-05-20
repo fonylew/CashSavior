@@ -42,6 +42,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void initialize() {
+        name.setText(MainActivity.userName);
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

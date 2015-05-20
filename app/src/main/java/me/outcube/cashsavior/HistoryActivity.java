@@ -6,11 +6,23 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+import history.HistoryLog;
 
 
 public class HistoryActivity extends ActionBarActivity {
 
     private Toolbar toolbar;
+    //TODO Ong
+    private ArrayList<HistoryLog> allHistory;
+    private ArrayList<HistoryLog> entHistory;
+    private ArrayList<HistoryLog> savHistory;
+    private ArrayList<HistoryLog> invHistory;
+    private ArrayList<HistoryLog> fixHistory;
+    private ArrayList<HistoryLog> incHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +36,17 @@ public class HistoryActivity extends ActionBarActivity {
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_nav_drawer);
         drawerFragment.setup((DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
-
         findAllById();
         initialize();
     }
 
     private void initialize(){
+        allHistory = MainActivity.historyDatabase.getAllHistory();
+        entHistory = MainActivity.historyDatabase.getCategoryHistory(1);
+        savHistory = MainActivity.historyDatabase.getCategoryHistory(2);
+        invHistory = MainActivity.historyDatabase.getCategoryHistory(3);
+        fixHistory = MainActivity.historyDatabase.getCategoryHistory(4);
+        incHistory = MainActivity.historyDatabase.getCategoryHistory(5);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

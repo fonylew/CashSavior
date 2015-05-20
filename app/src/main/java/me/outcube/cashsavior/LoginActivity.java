@@ -43,6 +43,7 @@ public class LoginActivity extends ActionBarActivity {
     private LoginButton facebookLoginBtn;
     private UiLifecycleHelper uiHelper;
     private String userId;
+    private String userName;
 
     private Session.StatusCallback statusCallback = new Session.StatusCallback() {
         @Override
@@ -120,8 +121,8 @@ public class LoginActivity extends ActionBarActivity {
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
                     userId = ""+user.getId();
-                    String t4 = ""+user.getName();
-                    facebookTv.setText("Welcome, " + t4 + ". Click to logout");
+                    userName = ""+user.getName();
+                    facebookTv.setText("Welcome, " + userName + ". Click to logout");
                 } else {
                     facebookTv.setText("Click to login with Facebook");
                 }
@@ -186,6 +187,7 @@ public class LoginActivity extends ActionBarActivity {
             public void onFinish() {
                 Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                 mainActivityIntent.putExtra("userId", userId);
+                mainActivityIntent.putExtra("userName", userName);
                 prgDialog.dismiss();
                 startActivity(mainActivityIntent);
                 finish();
