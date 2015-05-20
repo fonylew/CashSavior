@@ -2,7 +2,9 @@ package me.outcube.cashsavior;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -25,6 +27,7 @@ import org.json.JSONObject;
 
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +45,9 @@ public class MainActivity extends ActionBarActivity {
     public static HistoryDatabase historyDatabase;
     private ImageButton entImgBtn, savImgBtn, invImgBtn, fixImgBtn, incImgBtn;
     private View entFill, savFill, invFill, fixFill, incFill;
+    private Date todayDate;
+    private int totalEnt, totalSav, totalInv, totalFix, totalInc;
+    private float fillEnt, fillSav, fillInv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +61,41 @@ public class MainActivity extends ActionBarActivity {
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_nav_drawer);
         drawerFragment.setup((DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
-
+        getPreviousData();
         findViewById();
         initialize();
         Intent previousIntent = getIntent();
         userId = previousIntent.getStringExtra("userId");
+    }
+
+    private void getPreviousData(){
+        //TODO: sync server
+        todayDate = new Date();
+        boolean differenceMonth = false;
+        SharedPreferences orderData = getSharedPreferences("order", Context.MODE_APPEND);
+        if(orderData.getBoolean("saved", false)) {
+            totalEnt = orderData.getInt("totalEnt", 0);
+            totalSav = orderData.getInt("totalSav", 0);
+            totalInv = orderData.getInt("totalInv", 0);
+            totalFix = orderData.getInt("totalFix", 0);
+            totalInc = orderData.getInt("totalInc", 0);
+            fillEnt = orderData.getFloat("fillEnt", 0);
+            fillSav = orderData.getFloat("fillSav", 0);
+            fillInv = orderData.getFloat("fillInv", 0);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String datemsg = dateFormat.format(todayDate);
+            String previousDate = orderData.getString("previousDate", datemsg);
+            try {
+                Date preDate = dateFormat.parse(previousDate);
+                if (todayDate.getMonth() != preDate.getMonth()) differenceMonth = true;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        if (differenceMonth) {
+            totalEnt = totalFix = totalInc = totalInv = totalSav = 0;
+            fillEnt = fillSav = fillInv = 0;
+        }
     }
 
     private void initialize(){
@@ -75,39 +111,37 @@ public class MainActivity extends ActionBarActivity {
                 //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-                TextView typeName = (TextView) dialog.findViewById(R.id.type_name);
+                final TextView typeName = (TextView) dialog.findViewById(R.id.type_name);
                 TextView amount = (TextView) dialog.findViewById(R.id.amount);
                 ImageButton moreInfo = (ImageButton) dialog.findViewById(R.id.more_info_btn);
                 ImageButton addTransaction = (ImageButton) dialog.findViewById(R.id.add_btn);
 
                 int typeNum = 0;
 
-                //TODO To Mint: set amount for each Type in amount.setText(amount+"");
-                // don't forget to add blank string in setText() or it will crash
                 switch (view.getId()){
                     case R.id.ent_btn:
                         typeName.setText(getResources().getString(R.string.type1Name));
-                        amount.setText("1,234");
+                        amount.setText(""+totalEnt);
                         typeNum = 1;
                         break;
                     case R.id.sav_btn:
                         typeName.setText(getResources().getString(R.string.type2Name));
-                        amount.setText("2,345");
+                        amount.setText(""+totalSav);
                         typeNum = 2;
                         break;
                     case R.id.inv_btn:
                         typeName.setText(getResources().getString(R.string.type3Name));
-                        amount.setText("3,456");
+                        amount.setText(""+totalInv);
                         typeNum = 3;
                         break;
                     case R.id.fix_btn:
                         typeName.setText(getResources().getString(R.string.type4Name));
-                        amount.setText("4,567");
+                        amount.setText(""+totalFix);
                         typeNum = 4;
                         break;
                     case R.id.inc_btn:
                         typeName.setText(getResources().getString(R.string.type5Name));
-                        amount.setText("5,678");
+                        amount.setText(""+totalInc);
                         typeNum = 5;
                         break;
                 }
@@ -116,9 +150,18 @@ public class MainActivity extends ActionBarActivity {
                 addTransaction.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent transactionIntent = new Intent(MainActivity.this, TransactionActivity.class);
-                        transactionIntent.putExtra("typeNum", finalTypeNum);
-                        startActivityForResult(transactionIntent, TRANSACTION_REQUEST);
+                        if (finalTypeNum == 1 || finalTypeNum == 2 || finalTypeNum == 3) {
+                            if (totalInc == 0) Toast.makeText(getApplicationContext(),"Please fill your income first",Toast.LENGTH_LONG).show();
+                            else {
+                                Intent transactionIntent = new Intent(MainActivity.this, TransactionActivity.class);
+                                transactionIntent.putExtra("typeNum", finalTypeNum);
+                                startActivityForResult(transactionIntent, TRANSACTION_REQUEST);
+                            }
+                        } else {
+                            Intent transactionIntent = new Intent(MainActivity.this, TransactionActivity.class);
+                            transactionIntent.putExtra("typeNum", finalTypeNum);
+                            startActivityForResult(transactionIntent, TRANSACTION_REQUEST);
+                        }
                     }
                 });
                 dialog.show();
@@ -140,9 +183,16 @@ public class MainActivity extends ActionBarActivity {
                 String note = data.getStringExtra("note");
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = new Date();
-                String datemsg = dateFormat.format(date).toString();
+                String datemsg = dateFormat.format(date);
                 if (typeNum == 4 || typeNum == 5) subTypeNum = 1;
                 historyDatabase.addHistory(new HistoryLog(typeNum,subTypeNum,amount,datemsg,note));
+                switch (typeNum) {
+                    case 1: {totalEnt += amount; break;}
+                    case 2: {totalSav += amount; break;}
+                    case 3: {totalInv += amount; break;}
+                    case 4: {totalFix += amount; break;}
+                    case 5: {totalInc += amount; break;}
+                }
                 syncTransection();
             }
         }
@@ -247,6 +297,25 @@ public class MainActivity extends ActionBarActivity {
         }else{
             Toast.makeText(getApplicationContext(), "No data in SQLite DB, please do enter data to perform Sync action", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences.Editor outState = getSharedPreferences("order", Context.MODE_APPEND).edit();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String datemsg = dateFormat.format(todayDate);
+        outState.putBoolean("saved", true);
+        outState.putString("previousDate", datemsg);
+        outState.putInt("totalEnt", totalEnt);
+        outState.putInt("totalSav", totalSav);
+        outState.putInt("totalInv", totalInv);
+        outState.putInt("totalFix", totalFix);
+        outState.putInt("totalInc", totalInc);
+        outState.putFloat("fillEnt", fillEnt);
+        outState.putFloat("fillSav", fillSav);
+        outState.putFloat("fillInv", fillInv);
+        outState.commit();
     }
 
 }
