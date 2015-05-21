@@ -10,10 +10,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +47,9 @@ public class MainActivity extends ActionBarActivity {
     final private int TRANSACTION_REQUEST = 0;
     private ProgressDialog prgDialog;
     private Toolbar toolbar;
+    private Dialog dialog;
+    private int dialogTypeNum;
+
     public static String userId;
     public static String userName;
     public static HistoryDatabase historyDatabase;
@@ -122,8 +128,8 @@ public class MainActivity extends ActionBarActivity {
                     ArrayList<HistoryLog> unsynchistory = historyDatabase.getUnsyncHistory();
                     historyDatabase.deleteAll();
                     totalEnt = totalFix = totalInc = totalInv = totalSav = 0;
-                    for(int i=0; i<arr.length();i++){
-                        JSONObject obj = (JSONObject)arr.get(i);
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = (JSONObject) arr.get(i);
                         String date = obj.get("date").toString();
                         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         try {
@@ -132,11 +138,26 @@ public class MainActivity extends ActionBarActivity {
                                 int t = Integer.parseInt(obj.get("typeid").toString());
                                 int a = Integer.parseInt(obj.get("amount").toString());
                                 switch (t) {
-                                    case 1: {totalEnt += a; break;}
-                                    case 2: {totalSav += a; break;}
-                                    case 3: {totalInv += a; break;}
-                                    case 4: {totalFix += a; break;}
-                                    case 5: {totalInc += a; break;}
+                                    case 1: {
+                                        totalEnt += a;
+                                        break;
+                                    }
+                                    case 2: {
+                                        totalSav += a;
+                                        break;
+                                    }
+                                    case 3: {
+                                        totalInv += a;
+                                        break;
+                                    }
+                                    case 4: {
+                                        totalFix += a;
+                                        break;
+                                    }
+                                    case 5: {
+                                        totalInc += a;
+                                        break;
+                                    }
                                 }
                                 HistoryLog hislog = new HistoryLog();
                                 hislog.setTypeid(t);
@@ -144,7 +165,7 @@ public class MainActivity extends ActionBarActivity {
                                 hislog.setAmount(a);
                                 hislog.setDate(date);
                                 hislog.setNote(obj.get("note").toString());
-                                historyDatabase.addHistory(hislog,"yes");
+                                historyDatabase.addHistory(hislog, "yes");
                             }
                         } catch (ParseException e) {
                             e.printStackTrace();
@@ -153,11 +174,26 @@ public class MainActivity extends ActionBarActivity {
                     for (int i = 0; i < unsynchistory.size(); i++) {
                         HistoryLog temp = unsynchistory.get(i);
                         switch (temp.getTypeid()) {
-                            case 1: {totalEnt += temp.getAmount(); break;}
-                            case 2: {totalSav += temp.getAmount(); break;}
-                            case 3: {totalInv += temp.getAmount(); break;}
-                            case 4: {totalFix += temp.getAmount(); break;}
-                            case 5: {totalInc += temp.getAmount(); break;}
+                            case 1: {
+                                totalEnt += temp.getAmount();
+                                break;
+                            }
+                            case 2: {
+                                totalSav += temp.getAmount();
+                                break;
+                            }
+                            case 3: {
+                                totalInv += temp.getAmount();
+                                break;
+                            }
+                            case 4: {
+                                totalFix += temp.getAmount();
+                                break;
+                            }
+                            case 5: {
+                                totalInc += temp.getAmount();
+                                break;
+                            }
                         }
                         historyDatabase.addHistory(temp);
                     }
@@ -194,46 +230,51 @@ public class MainActivity extends ActionBarActivity {
         View.OnClickListener onClickImgButtonListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Dialog dialog = new Dialog(MainActivity.this);
+                dialog = new Dialog(MainActivity.this);
                 dialog.setContentView(R.layout.activity_category_popup);
-                //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
                 final TextView typeName = (TextView) dialog.findViewById(R.id.type_name);
                 TextView amount = (TextView) dialog.findViewById(R.id.amount);
                 ImageButton moreInfo = (ImageButton) dialog.findViewById(R.id.more_info_btn);
                 ImageButton addTransaction = (ImageButton) dialog.findViewById(R.id.add_btn);
+                ImageButton mask = (ImageButton) dialog.findViewById(R.id.mask);
 
-                int typeNum = 0;
+                dialogTypeNum = 0;
 
                 switch (view.getId()){
                     case R.id.ent_btn:
                         typeName.setText(getResources().getString(R.string.type1Name));
                         amount.setText(""+totalEnt);
-                        typeNum = 1;
+                        mask.setImageResource(R.drawable.mask_entertainment);
+                        dialogTypeNum = 1;
                         break;
                     case R.id.sav_btn:
                         typeName.setText(getResources().getString(R.string.type2Name));
                         amount.setText(""+totalSav);
-                        typeNum = 2;
+                        mask.setImageResource(R.drawable.mask_saving);
+                        dialogTypeNum = 2;
                         break;
                     case R.id.inv_btn:
                         typeName.setText(getResources().getString(R.string.type3Name));
                         amount.setText(""+totalInv);
-                        typeNum = 3;
+                        mask.setImageResource(R.drawable.mask_invest);
+                        dialogTypeNum = 3;
                         break;
                     case R.id.fix_btn:
                         typeName.setText(getResources().getString(R.string.type4Name));
                         amount.setText(""+totalFix);
-                        typeNum = 4;
+                        mask.setImageResource(R.drawable.mask_fixcost);
+                        dialogTypeNum = 4;
                         break;
                     case R.id.inc_btn:
                         typeName.setText(getResources().getString(R.string.type5Name));
                         amount.setText(""+totalInc);
-                        typeNum = 5;
+                        mask.setImageResource(R.drawable.mask_income);
+                        dialogTypeNum = 5;
                         break;
                 }
-                final int finalTypeNum = typeNum;
+                final int finalTypeNum = dialogTypeNum;
 
                 addTransaction.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -260,6 +301,50 @@ public class MainActivity extends ActionBarActivity {
         invImgBtn.setOnClickListener(onClickImgButtonListener);
         fixImgBtn.setOnClickListener(onClickImgButtonListener);
         incImgBtn.setOnClickListener(onClickImgButtonListener);
+
+        refreshFillIcon();
+    }
+
+    public void refreshFillIcon(){
+        float fullHeight = entFill.getLayoutParams().width;
+
+        Toast.makeText(getApplicationContext(), fillEnt+"\n"+fillSav+"\n"+fillInv, Toast.LENGTH_SHORT).show();
+
+        entFill.getLayoutParams().height = (int)(fullHeight*fillEnt);
+        savFill.getLayoutParams().height = (int)(fullHeight*fillSav);
+        invFill.getLayoutParams().height = (int)(fullHeight*fillInv);
+
+        entFill.requestLayout();
+        savFill.requestLayout();
+        invFill.requestLayout();
+
+        if(dialog!=null && dialog.isShowing()){
+            TextView amount = (TextView) dialog.findViewById(R.id.amount);
+            View fill = dialog.findViewById(R.id.fill);
+            switch (dialogTypeNum){
+                case 1:
+                    amount.setText(totalEnt+"");
+                    fill.getLayoutParams().height = (int)(fill.getLayoutParams().width*fillEnt);
+                    break;
+                case 2:
+                    amount.setText(totalSav+"");
+                    fill.getLayoutParams().height = (int)(fill.getLayoutParams().width*fillSav);
+                    break;
+                case 3:
+                    amount.setText(totalInv+"");
+                    fill.getLayoutParams().height = (int)(fill.getLayoutParams().width*fillSav);
+                    break;
+                case 4:
+                    amount.setText(totalFix+"");
+                    break;
+                case 5:
+                    amount.setText(totalInc+"");
+                    break;
+            }
+
+
+
+        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -292,6 +377,7 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         }
+        refreshFillIcon();
     }
 
     private float calculatePercent(int type) {
@@ -299,15 +385,15 @@ public class MainActivity extends ActionBarActivity {
         float total2 = ((float)(totalInc - totalFix))/2;
         switch (type) {
             case 1: {
-                if (totalEnt > total) return 2;
+                if (totalEnt > total) return 1;
                 else return ((float)totalEnt)/total;
             }
             case 2: {
-                if (totalSav > total) return 2;
+                if (totalSav > total) return 1;
                 else return ((float)totalSav)/total;
             }
             case 3: {
-                if (totalInv > total2) return 2;
+                if (totalInv > total2) return 1;
                 else return ((float)totalInv)/total2;
             }
         }
@@ -329,8 +415,9 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.main2) {
-
+        if (id == R.id.refresh) {
+            refreshFillIcon();
+            Toast.makeText(getApplicationContext(), "refresh", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);

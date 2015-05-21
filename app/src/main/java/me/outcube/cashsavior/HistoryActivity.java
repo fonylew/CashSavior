@@ -4,18 +4,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import adapter.HistoryListAdapter;
 import history.HistoryLog;
 
 
 public class HistoryActivity extends ActionBarActivity {
 
     private Toolbar toolbar;
+    private ListView historyListview;
+
     //TODO Ong
     private ArrayList<HistoryLog> allHistory;
     private ArrayList<HistoryLog> entHistory;
@@ -36,6 +41,7 @@ public class HistoryActivity extends ActionBarActivity {
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_nav_drawer);
         drawerFragment.setup((DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+
         findAllById();
         initialize();
     }
@@ -47,9 +53,18 @@ public class HistoryActivity extends ActionBarActivity {
         invHistory = MainActivity.historyDatabase.getCategoryHistory(3);
         fixHistory = MainActivity.historyDatabase.getCategoryHistory(4);
         incHistory = MainActivity.historyDatabase.getCategoryHistory(5);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ArrayList<HistoryLog> inverseAllHistory = new ArrayList<HistoryLog>();
+        for (int i=allHistory.size()-1; i>=0; i--){
+            inverseAllHistory.add(allHistory.get(i));
+        }
+
+        HistoryListAdapter adapter = new HistoryListAdapter(
+                getApplicationContext(), R.layout.history_item, inverseAllHistory
+        );
+        historyListview.setAdapter(adapter);
+        historyListview.setDrawSelectorOnTop(true);
+
     }
 
     @Override
@@ -75,6 +90,6 @@ public class HistoryActivity extends ActionBarActivity {
     }
 
     private void findAllById(){
-
+        historyListview = (ListView) findViewById(R.id.history_listview);
     }
 }

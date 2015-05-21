@@ -57,6 +57,7 @@ public class NavigationDrawerFragment extends Fragment {
             public void onClick(View view) {
                 Intent historyIntent = new Intent(getActivity(), HistoryActivity.class);
                 startActivity(historyIntent);
+                getActivity().finish();
             }
         });
     }
@@ -77,6 +78,12 @@ public class NavigationDrawerFragment extends Fragment {
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mDrawerToggle.syncState();
+            }
+        });
     }
 
     private void findViewById(View view){

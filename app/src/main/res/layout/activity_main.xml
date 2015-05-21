@@ -113,14 +113,9 @@
                         android:paddingRight="30dp">
 
                         <View
-                            android:layout_width="@dimen/fill_btn_size_small"
-                            android:layout_height="@dimen/fill_btn_size_small"
-                            android:background="@color/unfilled" />
-
-                        <View
                             android:id="@+id/fill_fix"
                             android:layout_width="@dimen/fill_btn_size_small"
-                            android:layout_height="80dp"
+                            android:layout_height="@dimen/fill_btn_size_small"
                             android:layout_gravity="bottom"
                             android:background="@color/primaryColor" />
 
@@ -138,14 +133,9 @@
                         android:layout_height="wrap_content">
 
                         <View
-                            android:layout_width="@dimen/fill_btn_size_small"
-                            android:layout_height="@dimen/fill_btn_size_small"
-                            android:background="@color/unfilled" />
-
-                        <View
                             android:id="@+id/fill_inc"
                             android:layout_width="@dimen/fill_btn_size_small"
-                            android:layout_height="80dp"
+                            android:layout_height="@dimen/fill_btn_size_small"
                             android:layout_gravity="bottom"
                             android:background="@color/primaryColor" />
 

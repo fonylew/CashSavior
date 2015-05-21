@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:id="@+id/main2"
+        android:id="@+id/refresh"
         android:orderInCategory="100"
-        android:title="Test Main2"
+        android:title="Refresh"
         app:showAsAction="ifRoom" />
 </menu>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/curve_white"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/subtype_food"
+        android:layout_centerVertical="true"/>
+
+    <util.FontTextView
+        android:id="@+id/subtype_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:text="@string/subtype1_1"
+        android:layout_toRightOf="@+id/icon"
+        android:layout_centerVertical="true"
+        android:textColor="@color/black"
+        android:alpha="0.70"
+        android:textSize="23sp"
+        app:customFont="th.otf" />
+
+    <util.FontTextView
+        android:id="@+id/baht"
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/black"
+        android:alpha="0.70"
+        app:customFont="th.otf"
+        android:text="@string/baht"/>
+
+    <util.FontTextView
+        android:id="@+id/amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/baht"
+        android:textColor="@color/primaryColorDark"
+        android:layout_centerVertical="true"
+        android:textSize="24sp"
+        android:text="2,300" />
+
+
+
+</RelativeLayout>
