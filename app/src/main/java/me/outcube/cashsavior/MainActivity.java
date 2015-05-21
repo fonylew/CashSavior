@@ -236,7 +236,6 @@ public class MainActivity extends ActionBarActivity {
 
                 final TextView typeName = (TextView) dialog.findViewById(R.id.type_name);
                 TextView amount = (TextView) dialog.findViewById(R.id.amount);
-                ImageButton moreInfo = (ImageButton) dialog.findViewById(R.id.more_info_btn);
                 ImageButton addTransaction = (ImageButton) dialog.findViewById(R.id.add_btn);
                 ImageButton mask = (ImageButton) dialog.findViewById(R.id.mask);
 

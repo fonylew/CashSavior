@@ -29,14 +29,14 @@ public class HistoryListAdapter extends ArrayAdapter<HistoryLog> {
             {R.string.subtype_5_1}};
 
     public static final int SUBTYPE_IMG_ID[][] = {
-            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,
-                    R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food
-                    ,R.drawable.subtype_food},
-            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food},
-            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,
-                    R.drawable.subtype_food,R.drawable.subtype_food},
-            {R.drawable.subtype_food},
-            {R.drawable.subtype_food}};
+            {R.drawable.subtype_food,R.drawable.subtype_drink,R.drawable.subtype_movie,
+                    R.drawable.subtype_brand,R.drawable.subtype_vacation,R.drawable.subtype_donate
+                    ,R.drawable.subtype_present},
+            {R.drawable.subtype_bank,R.drawable.subtype_lottery,R.drawable.subtype_bond},
+            {R.drawable.subtype_money,R.drawable.subtype_expand,R.drawable.subtype_stock,
+                    R.drawable.subtype_gold,R.drawable.subtype_learn},
+            {R.drawable.subtype_fixcost},
+            {R.drawable.subtype_income}};
 
     public HistoryListAdapter(Context context, int resource, HistoryLog[] objects) {
         super(context, resource, objects);

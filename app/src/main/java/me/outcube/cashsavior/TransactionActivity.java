@@ -23,17 +23,17 @@ public class TransactionActivity extends ActionBarActivity {
             {R.string.subtype1_1, R.string.subtype1_2, R.string.subtype1_3,
                     R.string.subtype1_4, R.string.subtype1_5, R.string.subtype1_6,
                     R.string.subtype1_7},
-            {R.string.subtype2_1,R.string.subtype2_2,R.string.subtype2_3, },
+            {R.string.subtype2_1,R.string.subtype2_2,R.string.subtype2_3},
             {R.string.subtype3_1, R.string.subtype3_2, R.string.subtype3_3,
                     R.string.subtype3_4, R.string.subtype3_5}};
 
     public static final int SUBTYPE_IMG_ID[][] = {
-            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,
-                    R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food
-                    ,R.drawable.subtype_food},
-            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food},
-            {R.drawable.subtype_food,R.drawable.subtype_food,R.drawable.subtype_food,
-                    R.drawable.subtype_food,R.drawable.subtype_food}};
+            {R.drawable.subtype_food,R.drawable.subtype_drink,R.drawable.subtype_movie,
+                    R.drawable.subtype_brand,R.drawable.subtype_vacation,R.drawable.subtype_donate
+                    ,R.drawable.subtype_present},
+            {R.drawable.subtype_bank,R.drawable.subtype_lottery,R.drawable.subtype_bond},
+            {R.drawable.subtype_money,R.drawable.subtype_expand,R.drawable.subtype_stock,
+                    R.drawable.subtype_gold,R.drawable.subtype_learn}};
 
     private int typeNum;
     private Toolbar toolbar;

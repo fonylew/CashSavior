@@ -8,14 +8,16 @@
     android:gravity="center">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="160dp"
-        android:src="@drawable/mock_logo"/>
-    <TextView
+        android:layout_width="300dp"
+        android:layout_height="120dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/cashsavior_logo"/>
+    <util.FontTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="CashSavior (mock logo)"/>
+        android:text="Your personal money companion"
+        android:textSize="15sp"/>
 
     <View
         android:layout_width="match_parent"
@@ -29,14 +31,16 @@
         android:background="@drawable/facebook_login_btn"
         android:padding="30dp"
         facebook:confirm_logout="false"
-        facebook:fetch_user_info="true"/>
+        facebook:fetch_user_info="true"
+        android:text="Click to Login"/>
     <TextView
         android:id="@+id/facebook.tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Login with Facebook"/>
+        android:gravity="center"/>
+
     <View
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 
@@ -44,6 +48,8 @@
         android:id="@+id/main_activity_btn"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:text="Main Activity"/>
+        android:text="Enter"
+        android:textSize="18sp"
+        style="@style/Base.Theme.AppCompat.Light"/>
 
 </LinearLayout>

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import me.outcube.cashsavior.R;
 
 public class NavigationDrawerFragment extends Fragment {
 
@@ -21,7 +20,7 @@ public class NavigationDrawerFragment extends Fragment {
     private DrawerLayout mDrawerLayout;
 
     private ImageView profile, homeIcon, historyIcon;
-    private TextView name, email;
+    private TextView name;
     private View homeBtn, historyBtn;
 
     public NavigationDrawerFragment() {
@@ -97,7 +96,6 @@ public class NavigationDrawerFragment extends Fragment {
     private void findViewById(View view){
         profile = (ImageView) view.findViewById(R.id.profile_pic);
         name = (TextView) view.findViewById(R.id.name);
-        email = (TextView) view.findViewById(R.id.email);
 
         homeIcon = (ImageView) view.findViewById(R.id.home_icon);
         homeBtn = view.findViewById(R.id.home_btn);
